@@ -1,17 +1,25 @@
 # set base image
-FROM python:3.8
+FROM python:3.8.1-slim
 
-# set the working directory in the container
+# set working directory
 WORKDIR /app
 
-# copy the dependencies file to the working directory
-COPY requirements.txt .
+# set environment variables
+ENV PYTHONPATH "${PYTHONPATH}:/"
 
-# install dependencies
-RUN pip install -r requirements.txt
+# install system dependencies
+RUN apt-get update -qq && \
+    apt-get install libgomp1
+RUN pip install --upgrade pip setuptools
 
-# copy the content of the local src directory to the working directory
-COPY src/ .
+# copy and install python dependencies
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# command to run on container start
-CMD [ "python", "./server.py" ]
+# copy app into working directory and grant read/write permissions to data folder
+COPY . /app
+RUN chmod -R 777 /app/data/
+
+# configure entrypoint
+ENTRYPOINT [ "/bin/sh", "entry-point.sh" ]
+CMD [ "python3" ]
