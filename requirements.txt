@@ -1,5 +1,7 @@
-wheel
-jupyter
-pandas
 numpy
-
+matplotlib
+scipy
+scikit-learn
+pandas
+nltk
+pathlib==1.0.1
