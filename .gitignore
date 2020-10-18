@@ -1,0 +1,5 @@
+dev
+venv
+*.swp
+.vscode
+.ipynb_checkpoints
