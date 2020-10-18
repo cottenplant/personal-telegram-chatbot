@@ -55,11 +55,5 @@ if __name__ == '__main__':
     user = 'samco'  # argparse
     chats_file_infile = Path('data/input/result.json')
     chats_file_output = Path(f'data/output/{user}.json')
-
-    args = parse_arguments()
-
-    user = args.user if args.user is not None else user
-    infile = args.infile if args.infile is not None else chats_file_infile
-    outfile = args.outfile if args.outfile is not None else chats_file_output
-
-    main(infile, outfile, user)
+    
+    main(user, chats_file_infile, chats_file_output)
