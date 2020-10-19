@@ -1,6 +1,10 @@
-dev
-venv
-*.swp
+devipynb_checkpoints
 .vscode
+dev
+notebooks
+venv
+test.sh
+*.swp
 .ipynb_checkpoints
 .idea
+lib

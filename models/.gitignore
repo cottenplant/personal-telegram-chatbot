@@ -1,1 +1,4 @@
 *.csv
+*.pickle
+*.h5
+*.txt

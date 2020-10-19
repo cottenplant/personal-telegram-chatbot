@@ -1,5 +1,5 @@
 # set base image
-FROM python:3.8.1-slim
+FROM tensorflow/tensorflow:latest
 
 # set working directory
 WORKDIR /app
@@ -22,5 +22,5 @@ COPY . /app
 RUN chmod -R 777 /app/data/
 
 # configure entrypoint
-ENTRYPOINT [ "/bin/sh", "entry-point.sh" ]
-CMD [ "python" ]
+# ENTRYPOINT [ "/bin/sh", "test.sh" ]
+CMD [ "python", "-c", "chatbot/scripts/generate_text.py" ]
