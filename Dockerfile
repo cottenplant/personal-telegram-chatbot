@@ -21,6 +21,4 @@ RUN pip install --no-cache-dir -r /app/requirements.txt && \
 COPY . /app
 RUN chmod -R 777 /app/data/
 
-# configure entrypoint
-# ENTRYPOINT [ "/bin/sh", "test.sh" ]
-CMD [ "python", "-c", "chatbot/scripts/generate_text.py" ]
+CMD [ "python", "main.py" ]
