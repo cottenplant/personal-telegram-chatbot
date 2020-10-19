@@ -107,7 +107,7 @@ def create_fit_model():
     tokenizer, sequences = keras_tokenizer(text_sequences)
     
     # train, test, split
-    vocab_size, seq_length, X, y = train_test_split(tokenizer, sequences)
+    vocab_size, seq_len, X, y = train_test_split(tokenizer, sequences)
     
     # create model - add 1 space to hold 0 for padding
     model = create_model(vocab_size+1, seq_len, paths_local['multiplier'])
