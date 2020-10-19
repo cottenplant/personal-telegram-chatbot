@@ -23,3 +23,4 @@ RUN chmod -R 777 /app/data/
 
 # configure entrypoint
 ENTRYPOINT [ "/bin/sh", "entry-point.sh" ]
+CMD [ "python" ]
