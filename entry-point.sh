@@ -1,6 +1,4 @@
 #!usr/bin/env python3
 
-export PYTHONPATH=${pwd} && python scripts/parse_transcripts.py
-export PYTHONPATH=${pwd} && python scripts/tokenize_train_generate.py
-
-echo "Done!"
+export PYTHONPATH='.' && python chatbot/parse_transcripts.py
+export PYTHONPATH='.' && python chatbot/tokenize_train_generate.py

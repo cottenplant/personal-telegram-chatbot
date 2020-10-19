@@ -1,4 +1,3 @@
-# Should split into preprocess and train so can use vars
 import numpy as np
 import pandas as pd
 import pickle
@@ -136,7 +135,7 @@ def pick_random_seed_text():
     
     random.seed(101)
     random_pick = random.randint(0, len(seed_df))
-    random_seed_text = text_to_sequences[random_pick]
+    random_seed_text = seed_df[random_pick]
     
     seed_text = ' '.join(random_seed_text)
     print(f'seed_text: {seed_text}')
