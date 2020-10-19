@@ -9,7 +9,7 @@ ENV PYTHONPATH "${PYTHONPATH}:/"
 
 # install system dependencies
 RUN apt-get update -qq && \
-    apt-get install libgomp1 build-essential python-dev git
+    apt-get install -qq libgomp1 build-essential python-dev git
 RUN pip install --upgrade pip setuptools
 
 # copy and install python dependencies
@@ -23,4 +23,3 @@ RUN chmod -R 777 /app/data/
 
 # configure entrypoint
 ENTRYPOINT [ "/bin/sh", "entry-point.sh" ]
-CMD [ "python" ]
