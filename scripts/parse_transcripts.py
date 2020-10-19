@@ -2,7 +2,7 @@ import sys
 import json
 import argparse
 
-from pathlib import Path
+from scripts.settings import RelativePath
 
 
 def parse_arguments():
@@ -28,33 +28,40 @@ def get_personal_chats(chats_json, user_from):
         if chat['type'] == 'personal_chat':
             for message in chat['messages']:
                 if message['type'] == 'message' and message['from'] == user_from:
-                    results[chat['id']] = [message['text'] for message in chat['messages']]
+                    results[chat['id']] = [message['text'] for message in chat['messages'] if type(message['text']) == str]
     
     return results
 
 
 def main():
-    # open and parse input file, output result
-    with open(chats_file_infile, 'r') as file:
-        chats_json = json.load(file)
-    chats = get_personal_chats(chats_json, user)
-    with open(chats_file_output, 'w') as output_file_path:
-        json.dump(chats, output_file_path)
-
+    # open and parse input file, wrangle format, and dump JSON result
+    with open(path_local.chats_raw_json, 'r') as infile:
+        chats_json = json.load(infile)
+    chats = get_personal_chats(chats_json, path_local.user)
+    with open(path_local.chats_processed_json, 'w') as outfile:
+        json.dump(chats, outfile)
+    
+    # also dump full text version for nlp model
+    with open(path_local.chats_processed_txt, 'w') as outfile:
+        outfile.write('. '.join([message for message in chats.values()][0]))
+    
 
 if __name__ == '__main__':
-    # default vars
-    user = 'samco'
-    chats_file_infile = Path('./data/input/result.json')
-    chats_file_output = Path(f'./data/output/{user}.json')
+    path_local = RelativePath(
+        user='samco', 
+        seq_length=15,
+        multiplier=4,
+        num_gen_words=25,
+        num_epochs=200
+    )
 
-    # parse args
+    # parse args - later can use for other users
     args = parse_arguments()
     if not args.infile:
-        args.infile = chats_file_infile
+        args.infile = path_local.chats_raw_json
     if not args.outfile:
-        args.outfile = chats_file_output
+        args.outfile = path_local.chats_processed_json
     if not args.user:
-        args.user = user
+        args.user = path_local.user
     
     main()

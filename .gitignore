@@ -3,3 +3,5 @@ venv
 *.swp
 .vscode
 .ipynb_checkpoints
+notebooks
+.idea

@@ -9,12 +9,13 @@ ENV PYTHONPATH "${PYTHONPATH}:/"
 
 # install system dependencies
 RUN apt-get update -qq && \
-    apt-get install libgomp1
+    apt-get install libgomp1 build-essential python-dev git
 RUN pip install --upgrade pip setuptools
 
 # copy and install python dependencies
 COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt && \
+    python -m spacy download en
 
 # copy app into working directory and grant read/write permissions to data folder
 COPY . /app
@@ -22,4 +23,4 @@ RUN chmod -R 777 /app/data/
 
 # configure entrypoint
 ENTRYPOINT [ "/bin/sh", "entry-point.sh" ]
-CMD [ "python3" ]
+CMD [ "python" ]
