@@ -44,18 +44,14 @@ def keras_tokenizer(text_sequences):
     # integer encode sequences of words
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(text_sequences)
-    sequences = tokenizer.texts_to_sequences(text_sequences)
-    
-    # save for random seeding later
-    pd.DataFrame(sequences).to_csv(paths_local['sequences_seed_path'], index=False)
-    
+    sequences = tokenizer.texts_to_sequences(text_sequences)    
     # index_word tokenized with UID, word counts, vocabulary size - interesting
     # for i in sequences[0]:
     #     print(f'UUID {i} : {tokenizer.index_word[i]}')
     # print(f'word counts: {tokenizer.word_counts}')
     # print(f'vocab size: {len(tokenizer.word_counts)}')
     
-    return tokenizer, sequences
+    return tokenizer, sequences, text_sequences
 
 
 def train_test_split(tokenizer, sequences):
@@ -102,8 +98,11 @@ def create_fit_model():
     tokenized_text = preprocess(message_text)
     text_sequences = create_token_sequence(tokenized_text)
     
+    # save for random seeding later
+    # pd.DataFrame(text_sequences).to_csv(paths_local['sequences_seed_path'], index=False)
+    
     # tokenize data using token sequences in keras
-    tokenizer, sequences = keras_tokenizer(text_sequences)
+    tokenizer, sequences, text_sequences = keras_tokenizer(text_sequences)
     
     # train, test, split
     vocab_size, seq_len, X, y = train_test_split(tokenizer, sequences)
@@ -126,16 +125,13 @@ def create_fit_model():
     # not sure how to save tokenizer
     # pickle.dump(tokenizer, open(path_local.tokenizer_path), 'wb'))
 
-    return model, tokenizer
+    return model, tokenizer, text_sequences
 
 
-def pick_random_seed_text():
-    # can use anything really
-    seed_df = pd.read_csv(paths_local['sequences_seed_path'])
-    
+def pick_random_seed_text(text_sequences):
     random.seed(101)
-    random_pick = random.randint(0, len(seed_df))
-    random_seed_text = seed_df[random_pick]
+    random_pick = random.randint(0, len(text_sequences))
+    random_seed_text = text_sequences[random_pick]
     
     seed_text = ' '.join(random_seed_text)
     print(f'seed_text: {seed_text}')
@@ -178,8 +174,8 @@ def generate_text(model, tokenizer, seq_len, seed_text, num_gen_words):
 
 
 def main():
-    model, tokenizer = create_fit_model()
-    random_seed_text = pick_random_seed_text()
+    model, tokenizer, text_sequences = create_fit_model()
+    random_seed_text = pick_random_seed_text(text_sequences)
 
     generate_text(
         model=model,
