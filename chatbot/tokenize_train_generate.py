@@ -5,7 +5,7 @@ import pickle
 import random
 import spacy
 
-from scripts.settings import RelativePath
+from chatbot.config.settings import paths_local
 
 from tensorflow import keras
 from keras.preprocessing.text import Tokenizer
@@ -48,7 +48,7 @@ def keras_tokenizer(text_sequences):
     sequences = tokenizer.texts_to_sequences(text_sequences)
     
     # save for random seeding later
-    pd.DataFrame(sequences).to_csv(path_local.sequences_seed_path, index=False)
+    pd.DataFrame(sequences).to_csv(paths_local['sequences_seed_path'], index=False)
     
     # index_word tokenized with UID, word counts, vocabulary size - interesting
     # for i in sequences[0]:
@@ -99,7 +99,7 @@ def create_model(vocabulary_size, seq_len, multiplier):
 
 def create_fit_model():
     # read in preprocess and create token sequences
-    message_text = read_file(path_local.chats_processed_txt)
+    message_text = read_file(paths_local['chats_processed_txt'])
     tokenized_text = preprocess(message_text)
     text_sequences = create_token_sequence(tokenized_text)
     
@@ -107,17 +107,17 @@ def create_fit_model():
     tokenizer, sequences = keras_tokenizer(text_sequences)
     
     # train, test, split
-    vocab_size, sequence_length, X, y = train_test_split(tokenizer, sequences)
+    vocab_size, seq_length, X, y = train_test_split(tokenizer, sequences)
     
     # create model - add 1 space to hold 0 for padding
-    model = create_model(vocab_size+1, path_local.seq_len, path_local.multiplier)
+    model = create_model(vocab_size+1, seq_len, paths_local['multiplier'])
 
     # train model
     model.fit(X, y, batch_size=128, epochs=200, verbose=1)
 
     # save pickle model
     model.save(
-        path_local.model_path, 
+        paths_local['model_path'], 
         overwrite=True, 
         include_optimizer=True, 
         save_format=None, 
@@ -132,7 +132,7 @@ def create_fit_model():
 
 def pick_random_seed_text():
     # can use anything really
-    seed_df = pd.read_csv(path_local.sequences_seed_path)
+    seed_df = pd.read_csv(paths_local['sequences_seed_path'])
     
     random.seed(101)
     random_pick = random.randint(0, len(seed_df))
@@ -185,18 +185,11 @@ def main():
     generate_text(
         model=model,
         tokenizer=tokenizer, 
-        seq_len=path_local.seq_len,
+        seq_len=paths_local['seq_len'],
         seed_text=random_seed_text, 
-        num_gen_words=path_local.num_gen_words
+        num_gen_words=paths_local['num_gen_words']
     )
 
 
 if __name__ == '__main__':
-    path_local = RelativePath(
-        user='samco', 
-        seq_length=15,
-        multiplier=4,
-        num_gen_words=25,
-        num_epochs=200
-    )
     main()

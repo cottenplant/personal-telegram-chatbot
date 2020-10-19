@@ -2,7 +2,7 @@ import sys
 import json
 import argparse
 
-from scripts.settings import RelativePath
+from chatbot.config.settings import paths_local
 
 
 def parse_arguments():
@@ -35,33 +35,25 @@ def get_personal_chats(chats_json, user_from):
 
 def main():
     # open and parse input file, wrangle format, and dump JSON result
-    with open(path_local.chats_raw_json, 'r') as infile:
+    with open(paths_local['chats_raw_json'], 'r') as infile:
         chats_json = json.load(infile)
-    chats = get_personal_chats(chats_json, path_local.user)
-    with open(path_local.chats_processed_json, 'w') as outfile:
+    chats = get_personal_chats(chats_json, paths_local['user'])
+    with open(paths_local['chats_processed_json'], 'w') as outfile:
         json.dump(chats, outfile)
     
     # also dump full text version for nlp model
-    with open(path_local.chats_processed_txt, 'w') as outfile:
+    with open(paths_local['chats_processed_txt'], 'w') as outfile:
         outfile.write('. '.join([message for message in chats.values()][0]))
     
 
 if __name__ == '__main__':
-    path_local = RelativePath(
-        user='samco', 
-        seq_length=15,
-        multiplier=4,
-        num_gen_words=25,
-        num_epochs=200
-    )
-
     # parse args - later can use for other users
     args = parse_arguments()
     if not args.infile:
-        args.infile = path_local.chats_raw_json
+        args.infile = paths_local['chats_raw_json']
     if not args.outfile:
-        args.outfile = path_local.chats_processed_json
+        args.outfile = paths_local['chats_processed_json']
     if not args.user:
-        args.user = path_local.user
+        args.user = paths_local['user']
     
     main()
