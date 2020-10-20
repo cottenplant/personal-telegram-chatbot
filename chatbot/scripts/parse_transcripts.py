@@ -5,10 +5,11 @@ from chatbot.config.settings import paths_local
 
 
 def parse_arguments():
-    # build parser
     parser = argparse.ArgumentParser(description='Process Telegram chat data.')
-    parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), help='input file path formatted as JSON')
-    parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), help='output file path for formatted JSON')
+    parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), 
+                        help='input file path formatted as JSON')
+    parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), 
+                        help='output file path for formatted JSON')
     parser.add_argument('-u', '--user', nargs='?', type=str, help='insert user')
     args = parser.parse_args()
 

@@ -1,24 +1,25 @@
-# set base image
-FROM tensorflow/tensorflow:latest
+FROM python:3.8-slim-buster
 
-# set working directory
+ENV LANG C.UTF-8
+
 WORKDIR /app
 
-# set environment variables
-ENV PYTHONPATH "${PYTHONPATH}:/"
+RUN apt-get update -qq && apt-get install -qqy --no-install-recommends \
+    python3-pip \
+    python3-setuptools \
+    python3-wheel \
+    build-essential \
+    python3-dev \
+    tree
 
-# install system dependencies
-RUN apt-get update -qq && \
-    apt-get install -qq libgomp1 build-essential python-dev git
-RUN pip install --upgrade pip setuptools
-
-# copy and install python dependencies
 COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt && \
+
+RUN pip install --upgrade pip setuptools && \
+    pip install --no-cache-dir -r /app/requirements.txt && \
     python -m spacy download en
 
-# copy app into working directory and grant read/write permissions to data folder
 COPY . /app
-RUN chmod -R 777 /app/data/
 
-CMD [ "python", "main.py" ]
+RUN chmod -R 777 /app/tmp
+
+ENTRYPOINT [ "python", "main.py" ]

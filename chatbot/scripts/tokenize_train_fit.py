@@ -32,17 +32,15 @@ def create_sequence_tokens(tokens, train_cycle=25):
     for i in range(train_len, len(tokens)):
         seq = tokens[i-train_len:i]
         text_sequences.append(seq)
-    print(len(text_sequences))
+    print(f"\nlen_text_sequences:\n{len(text_sequences)}")
 
     return text_sequences
 
 
 def keras_tokenization(text_sequences):
-    # integer encode sequences of words
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(text_sequences)
     sequences = tokenizer.texts_to_sequences(text_sequences)
-    print(tokenizer.word_counts)
     vocabulary_size = len(tokenizer.word_counts)
 
     return sequences, tokenizer, vocabulary_size
@@ -66,7 +64,7 @@ def train_test_split(sequences, vocabulary_size):
     y = sequences[:, -1]
     y = to_categorical(y, num_classes=vocabulary_size+1)
     seq_len = X.shape[1]
-    print(seq_len)
+    print(f"\nseq_len:\n{seq_len}")
 
     return X, y, seq_len
 
@@ -81,11 +79,12 @@ def main():
 
     X, y, seq_len = train_test_split(sequences, vocabulary_size)
     model = create_model(vocabulary_size+1, seq_len)
-    model.fit(X, y, batch_size=128, epochs=paths_local['num_epochs'], verbose=1)
+    model.fit(X, y, batch_size=128, epochs=320, verbose=1)
 
     model.save(paths_local['model_path'])
     pickle.dump(tokenizer, open(paths_local['tokenizer_path'], 'wb'))
     pickle.dump(text_sequences, open(paths_local['text_sequences'], 'wb'))
+    pickle.dump(tokenizer.word_counts, open(paths_local['tokenizer_wordcounts'], 'wb'))
 
 
 if __name__ == '__main__':

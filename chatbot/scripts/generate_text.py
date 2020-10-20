@@ -2,6 +2,7 @@ from chatbot.config.settings import paths_local
 
 import pickle
 import random
+import time
 import pandas as pd
 
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -14,7 +15,8 @@ def unpickle(filepath):
 
 
 def pick_random_seed_text(text_sequences):
-    random.seed(101)
+    seed = round(time.time())
+    random.seed(seed)
     random_pick = random.randint(0, len(text_sequences))
     random_seed_text = text_sequences[random_pick]
     seed_text = ' '.join(random_seed_text)
@@ -32,7 +34,7 @@ def generate_text(model, tokenizer, seq_len, seed_text, num_gen_words):
     """
     output_text = []
     input_text = seed_text
-    print(f"seed_text: {seed_text}")
+    print(f"\nseed_text:\n{seed_text}\n")
     
     for _ in range(num_gen_words):
         encoded_text = tokenizer.texts_to_sequences([input_text])[0]

@@ -8,3 +8,4 @@ test.sh
 .ipynb_checkpoints
 .idea
 lib
+tmp
