@@ -1,4 +1,4 @@
-from chatbot.config.settings import paths_local
+from nlp.config.settings import paths_local
 
 import pickle
 import random

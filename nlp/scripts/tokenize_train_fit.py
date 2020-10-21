@@ -2,7 +2,7 @@ import numpy as np
 import pickle
 import spacy
 
-from chatbot.config.settings import paths_local
+from nlp.config.settings import paths_local
 
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.utils import to_categorical

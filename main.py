@@ -1,4 +1,4 @@
-from chatbot.scripts import generate_text
+from nlp.scripts import generate_text
 
 
 response = generate_text.main()
