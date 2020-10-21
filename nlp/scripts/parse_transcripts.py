@@ -1,7 +1,7 @@
 import json
 import argparse
 
-from chatbot.config.settings import paths_local
+from nlp.config.settings import paths_local
 
 
 def parse_arguments():
