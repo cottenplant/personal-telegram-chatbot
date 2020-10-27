@@ -1,4 +1,4 @@
-___WIP: this project is in its early stages___
+___WIP___
 # personal-telegram-chatbot
 
 ## About
